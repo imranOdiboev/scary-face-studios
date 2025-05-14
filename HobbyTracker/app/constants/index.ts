@@ -21,7 +21,13 @@ export const tabs = [
     id: 4, 
     iconActive: require('@/assets/images/icon_social.png'),
     iconInactive: require('@/assets/images/icon_social.png'),
-    label: "Соц Сети",
+    label: "Добавить Мероприятие",
+  },
+  { 
+    id: 5, 
+    iconActive: require('@/assets/images/calendar.png'),
+    iconInactive: require('@/assets/images/calendar.png'),
+    label: "Календарь",
   },
 ];
 

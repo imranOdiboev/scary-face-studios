@@ -28,7 +28,7 @@ services:
   frontend:
     build: 
       context: .
-      dockerfile: ./app/Dockerfile  # Укажите путь к Dockerfile фронтенда
+      dockerfile: ./app/Dockerfile
     ports:
       - "3000:3000"
     depends_on:
