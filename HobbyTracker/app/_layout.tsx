@@ -52,6 +52,7 @@ const App = () => {
   const [isScheduling, setIsScheduling] = useState(false);
   const [selectedCalendarDate, setSelectedCalendarDate] = useState(format(new Date(), 'yyyy-MM-dd'));
 
+  
 
   const formatScheduledHobbiesForCalendar = (hobbiesList) => {
     const markedDates = {};
@@ -196,12 +197,8 @@ const App = () => {
       setLoadingScheduledHobbies(false);
     }
   };
-
   useEffect(() => {
     fetchUsers();
-    // Загрузка хобби теперь зависит от currentUser
-    // fetchHobbies();
-
     const checkCachedUser = async () => {
       try {
         const cachedUser = await AsyncStorage.getItem('@current_user');
@@ -220,15 +217,34 @@ const App = () => {
 
     checkCachedUser();
   }, []);
-
   useEffect(() => {
-    // Загружаем хобби и расписание при изменении currentUser
+    const updatedMarkedDates = formatScheduledHobbiesForCalendar(scheduledHobbiesList);
+    
+    if (updatedMarkedDates[selectedCalendarDate]) {
+      updatedMarkedDates[selectedCalendarDate] = {
+        ...updatedMarkedDates[selectedCalendarDate],
+        selected: true,
+        selectedColor: '#E4BA6A',
+        selectedTextColor: '#FFFFFF'
+      };
+    } else {
+      updatedMarkedDates[selectedCalendarDate] = {
+        selected: true,
+        selectedColor: '#E4BA6A',
+        selectedTextColor: '#FFFFFF'
+      };
+    }
+    
+    setScheduledHobbies(updatedMarkedDates);
+  }, [selectedCalendarDate, scheduledHobbiesList]);
+  useEffect(() => {
     fetchHobbies();
     fetchScheduledHobbies(currentUser?.id || null);
   }, [currentUser]);
 
    useEffect(() => {
     if (isSchedulingModalVisible && schedulingForHobby) {
+      
       try {
         const dateStringFromCalendar = format(parseISO(selectedCalendarDate), 'dd.MM.yyyy');
         setDateInput(dateStringFromCalendar);
@@ -780,16 +796,6 @@ const App = () => {
                         </ScrollView>
                       )}
                   </View>
-                   {!schedulingForHobby && (
-                      <TouchableOpacity
-                          style={styles.scheduleButton}
-                          onPress={() => {
-                               alert('Пожалуйста, выберите хобби из списка на вкладке "Хобби" для планирования.');
-                          }}
-                      >
-                          <Text style={styles.buttonText}>Запланировать хобби</Text>
-                      </TouchableOpacity>
-                  )}
                 </>
               )}
             </ScrollView>
